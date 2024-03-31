@@ -147,10 +147,11 @@ void readMessages() {
       memcpy(static_cast<void*>(messageBuffer+sizeRead), OSC_TERMINATOR, OSC_TERMINATOR_LENGTH);
 
       // Write OSC packet to client TCP
-      if (write(cfd, messageBuffer, sizeRead) != sizeRead) {
+      size_t bufferSize = sizeRead + OSC_TERMINATOR_LENGTH;
+      if (write(cfd, messageBuffer, bufferSize) != bufferSize) {
         // And finish with this client if it went away
         close(cfd);
-        std::cerr << "Disconnect and wait for new connection" << std::endl;
+        std::cerr << "Disconnect and wait for new OSC connection" << std::endl;
         break;
       }
     }
